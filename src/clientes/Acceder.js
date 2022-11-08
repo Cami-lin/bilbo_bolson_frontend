@@ -4,21 +4,59 @@ import { useEffect, useState } from "react";
 const baseURL = "http://localhost:3001";
 
 const Acceder = () => {
-    const [datos, setDatos] = useState(null);
+    let [datos, setDatos] = useState({});
+    const [frase, setfrase] = useState('esta es una prueba');
+
+    const obtenerEnums = async () =>{
+        try {
+            const response = await axios(baseURL + "/api/enums");
+            setDatos(response.data.data);
+            console.log(datos);
+            // console.log(datos);
+          } catch (err) {
+            console.error(err);
+          }
+    }
+
     useEffect(() => {
-        axios.get(baseURL + "/api/enums").then((response) => {
-            setDatos(response.data);
-            console.log(datos)
-        });
+        obtenerEnums()
+        
     }, []);
 
     return (
         <div className="container">
-            <div>{datos.map(dato => (
+            <div>
+                {frase}
+            </div>
+
+            <div>
+                {datos!=null ? (<ul>
+                    {Object.keys(datos).map(i=>(
+                        <div>
+                            <li>{i}</li> 
+                            {i != null && (
+                            <ul>
+                                {Object.keys(datos[i]).map(u=>(
+                                <li>{u}</li>
+                                 ))}
+                            </ul>
+
+                            )}
+                        </div>
+                    ))}
+                </ul>) : "no hay datos"}
+            </div>
+            {/* <div>
+                {datos?.enumAreaEncargada.map((item,i)=>(
+                    <li>{item}</li>
+                ))}
+            </div> */}
+            {/* <div>{datos!=null ? datos.map(dato => (
                 <li>
-                    {dato}
+                    {dato?.enumAreaEncargada}
                 </li>
-            ))}</div>
+            )): "No tengo datos"
+        }</div> */}
             <form>
                 <div class="row mb-3">
                     <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
